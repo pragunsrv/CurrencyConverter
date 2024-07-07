@@ -15,22 +15,19 @@
 
             <label for="from-currency">From:</label>
             <select id="from-currency">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
+                <!-- Options will be dynamically populated -->
             </select>
 
             <label for="to-currency">To:</label>
             <select id="to-currency">
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
+                <!-- Options will be dynamically populated -->
             </select>
 
             <button id="convert">Convert</button>
 
             <h2>Result:</h2>
             <p id="result">0 EUR</p>
+            <p id="error-message" class="error"></p>
         </div>
     </div>
     <script src="script.js"></script>

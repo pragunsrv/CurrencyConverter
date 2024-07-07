@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toCurrencySelect = document.getElementById('to-currency');
     const convertButton = document.getElementById('convert');
     const resultParagraph = document.getElementById('result');
+    const errorMessage = document.getElementById('error-message');
 
     const API_URL = 'https://api.exchangerate-api.com/v4/latest/USD'; // Base currency USD
 
@@ -23,27 +24,40 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateCurrencyOptions = (currencies) => {
-        const fromSelect = document.getElementById('from-currency');
-        const toSelect = document.getElementById('to-currency');
-
-        fromSelect.innerHTML = '';
-        toSelect.innerHTML = '';
+        fromCurrencySelect.innerHTML = '';
+        toCurrencySelect.innerHTML = '';
 
         currencies.forEach(currency => {
-            fromSelect.add(new Option(currency, currency));
-            toSelect.add(new Option(currency, currency));
+            fromCurrencySelect.add(new Option(currency, currency));
+            toCurrencySelect.add(new Option(currency, currency));
         });
     };
 
-    const convertCurrency = () => {
+    const validateInput = () => {
         const amount = parseFloat(amountInput.value);
         const fromCurrency = fromCurrencySelect.value;
         const toCurrency = toCurrencySelect.value;
 
-        if (isNaN(amount) || fromCurrency === toCurrency) {
-            resultParagraph.textContent = 'Please enter a valid amount and select different currencies.';
+        if (isNaN(amount) || amount <= 0) {
+            errorMessage.textContent = 'Please enter a valid amount greater than zero.';
+            return false;
+        }
+        if (fromCurrency === toCurrency) {
+            errorMessage.textContent = 'Please select different currencies for conversion.';
+            return false;
+        }
+        errorMessage.textContent = '';
+        return true;
+    };
+
+    const convertCurrency = () => {
+        if (!validateInput()) {
             return;
         }
+
+        const amount = parseFloat(amountInput.value);
+        const fromCurrency = fromCurrencySelect.value;
+        const toCurrency = toCurrencySelect.value;
 
         const rate = rates[toCurrency] / rates[fromCurrency];
         const convertedAmount = amount * rate;
