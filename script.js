@@ -5,11 +5,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const convertButton = document.getElementById('convert');
     const resultParagraph = document.getElementById('result');
 
-    // Hardcoded conversion rates
-    const conversionRates = {
-        USD: { EUR: 0.85, GBP: 0.75 },
-        EUR: { USD: 1.18, GBP: 0.88 },
-        GBP: { USD: 1.33, EUR: 1.14 }
+    const API_URL = 'https://api.exchangerate-api.com/v4/latest/USD'; // Base currency USD
+
+    let rates = {};
+
+    const fetchRates = async () => {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            rates = data.rates;
+            // Update dropdown options dynamically based on available currencies
+            updateCurrencyOptions(Object.keys(rates));
+        } catch (error) {
+            console.error('Error fetching currency rates:', error);
+            resultParagraph.textContent = 'Failed to fetch currency rates.';
+        }
+    };
+
+    const updateCurrencyOptions = (currencies) => {
+        const fromSelect = document.getElementById('from-currency');
+        const toSelect = document.getElementById('to-currency');
+
+        fromSelect.innerHTML = '';
+        toSelect.innerHTML = '';
+
+        currencies.forEach(currency => {
+            fromSelect.add(new Option(currency, currency));
+            toSelect.add(new Option(currency, currency));
+        });
     };
 
     const convertCurrency = () => {
@@ -22,10 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const rate = conversionRates[fromCurrency][toCurrency];
+        const rate = rates[toCurrency] / rates[fromCurrency];
         const convertedAmount = amount * rate;
         resultParagraph.textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
     };
 
     convertButton.addEventListener('click', convertCurrency);
+
+    // Fetch rates and initialize currency options on load
+    fetchRates();
 });
