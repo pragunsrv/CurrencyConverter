@@ -6,10 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const reverseButton = document.getElementById('reverse');
     const resultParagraph = document.getElementById('result');
     const errorMessage = document.getElementById('error-message');
-    const historicalRatesDiv = document.getElementById('historical-rates');
 
     const API_URL = 'https://api.exchangerate-api.com/v4/latest/USD'; // Base currency USD
-    const HISTORICAL_API_URL = 'https://api.exchangerate-api.com/v4/2020-01-01'; // Example historical date
 
     let rates = {};
 
@@ -23,17 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching currency rates:', error);
             resultParagraph.textContent = 'Failed to fetch currency rates.';
-        }
-    };
-
-    const fetchHistoricalRates = async () => {
-        try {
-            const response = await fetch(HISTORICAL_API_URL);
-            const data = await response.json();
-            displayHistoricalRates(data.rates);
-        } catch (error) {
-            console.error('Error fetching historical rates:', error);
-            historicalRatesDiv.textContent = 'Failed to fetch historical rates.';
         }
     };
 
@@ -88,19 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
         convertCurrency();
     };
 
-    const displayHistoricalRates = (rates) => {
-        historicalRatesDiv.innerHTML = '<h3>Historical Exchange Rates</h3>';
-        for (const [currency, rate] of Object.entries(rates)) {
-            const rateElement = document.createElement('p');
-            rateElement.textContent = `${currency}: ${rate}`;
-            historicalRatesDiv.appendChild(rateElement);
-        }
-    };
-
     convertButton.addEventListener('click', convertCurrency);
     reverseButton.addEventListener('click', reverseCurrencies);
 
     // Fetch rates and initialize currency options on load
     fetchRates();
-    fetchHistoricalRates();
 });
