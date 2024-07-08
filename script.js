@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fromCurrencySelect = document.getElementById('from-currency');
     const toCurrencySelect = document.getElementById('to-currency');
     const convertButton = document.getElementById('convert');
+    const reverseButton = document.getElementById('reverse');
     const resultParagraph = document.getElementById('result');
     const errorMessage = document.getElementById('error-message');
 
@@ -64,7 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
         resultParagraph.textContent = `${convertedAmount.toFixed(2)} ${toCurrency}`;
     };
 
+    const reverseCurrencies = () => {
+        const fromCurrency = fromCurrencySelect.value;
+        const toCurrency = toCurrencySelect.value;
+
+        fromCurrencySelect.value = toCurrency;
+        toCurrencySelect.value = fromCurrency;
+
+        convertCurrency();
+    };
+
     convertButton.addEventListener('click', convertCurrency);
+    reverseButton.addEventListener('click', reverseCurrencies);
 
     // Fetch rates and initialize currency options on load
     fetchRates();
